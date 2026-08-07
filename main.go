@@ -58,8 +58,11 @@ func main() {
 		if *del {
 			for _, p := range group[1:] {
 				if askDelete(p) {
-					os.Remove(p)
-					fmt.Printf("    已删除: %s\n", p)
+					if err := os.Remove(p); err != nil {
+						fmt.Fprintf(os.Stderr, "删除失败 %s: %v\n", p, err)
+					} else {
+						fmt.Printf("    已删除: %s\n", p)
+					}
 				}
 			}
 		}
@@ -107,6 +110,7 @@ func groupByHash(paths []string) map[string][]string {
 	for _, p := range paths {
 		h, err := sha256File(p)
 		if err != nil {
+			fmt.Fprintf(os.Stderr, "计算哈希失败 %s: %v\n", p, err)
 			continue
 		}
 		out[h] = append(out[h], p)

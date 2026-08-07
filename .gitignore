@@ -1,3 +1,7 @@
 # 编译产物
 *.exe
 /go-dupfind
+
+# 临时文件
+_*.txt
+*.tmp
